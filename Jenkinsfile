@@ -5,11 +5,6 @@ pipeline {
         AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
         AWS_DEFAULT_REGION    = 'us-west-2'
     }
-    options {
-        buildDiscarder(logRotator(daysToKeepStr: '10', numToKeepStr: '10'))
-        timeout(time: 12, unit: 'HOURS')
-        timestamps()
-    }
     stages {
         stage('Requirements') {
             steps {
@@ -25,7 +20,13 @@ pipeline {
                 sh('''#!/bin/bash
                         source ./local/bin/activate
                         flake8 --ignore=E501,E231 *.py tests/*.py
+                        ''')
+                sh('''#!/bin/bash
+                        source ./local/bin/activate
                         pylint --errors-only --disable=C0301 --disable=C0326 *.py tests/*.py
+                        ''')
+                sh('''#!/bin/bash
+                        source ./local/bin/activate
                         python -m unittest --verbose --failfast
                         ''')
             }
