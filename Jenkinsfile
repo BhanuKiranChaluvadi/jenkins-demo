@@ -1,5 +1,10 @@
 pipeline {
     agent any
+    environment {
+        AWS_ACCESS_KEY_ID     = credentials('AWS_ACCESS_KEY_ID')
+        AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
+        AWS_DEFAULT_REGION    = 'us-west-2'
+    }
     options {
         buildDiscarder(logRotator(daysToKeepStr: '10', numToKeepStr: '10'))
         timeout(time: 12, unit: 'HOURS')
@@ -15,10 +20,21 @@ pipeline {
                         ''')
             }
         }
+        stage('Check') {
+            steps {
+                sh('''#!/bin/bash
+                        source ./local/bin/activate
+                        flake8 --ignore=E501,E231 *.py tests/*.py
+                        pylint --errors-only --disable=C0301 --disable=C0326 *.py tests/*.py
+                        python -m unittest --verbose --failfast
+                        ''')
+            }
+        }
         stage('Build') {
             steps {
                 sh('''#!/bin/bash
                         source ./local/bin/activate
+                        ./upload-new-version.sh
                         ''')
             }
         }
@@ -26,6 +42,7 @@ pipeline {
             steps {
                 sh('''#!/bin/bash
                         source ./local/bin/activate
+                        ./deploy-new-version.sh staging
                         ''')
             }
         }
@@ -33,6 +50,7 @@ pipeline {
             steps {
                 sh('''#!/bin/bash
                         source ./local/bin/activate
+                        ./test-environment.sh staging
                         ''')
             }
         }
@@ -40,6 +58,7 @@ pipeline {
             steps {
                 sh('''#!/bin/bash
                         source ./local/bin/activate
+                        ./deploy-new-version.sh production
                         ''')
             }
         }
@@ -47,6 +66,7 @@ pipeline {
             steps {
                 sh('''#!/bin/bash
                         source ./local/bin/activate
+                        ./test-environment.sh production
                         ''')
             }
         }
