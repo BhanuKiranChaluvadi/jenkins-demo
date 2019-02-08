@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage('Requirements') {
             steps {
-                sh('''
+                sh('''#!/bin/bash
                         python3 -m virtualenv local
                         source ./local/bin/activate
                         pip install --upgrade --requirement requirements.txt
@@ -17,35 +17,35 @@ pipeline {
         }
         stage('Build') {
             steps {
-                sh('''
+                sh('''#!/bin/bash
                         source ./local/bin/activate
                         ''')
             }
         }
         stage('Deploy Staging') {
             steps {
-                sh('''
+                sh('''#!/bin/bash
                         source ./local/bin/activate
                         ''')
             }
         }
         stage('Test Staging') {
             steps {
-                sh('''
+                sh('''#!/bin/bash
                         source ./local/bin/activate
                         ''')
             }
         }
         stage('Deploy Production') {
             steps {
-                sh('''
+                sh('''#!/bin/bash
                         source ./local/bin/activate
                         ''')
             }
         }
         stage('Test Production') {
             steps {
-                sh('''
+                sh('''#!/bin/bash
                         source ./local/bin/activate
                         ''')
             }
