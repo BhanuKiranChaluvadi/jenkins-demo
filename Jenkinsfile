@@ -15,20 +15,23 @@ pipeline {
                         ''')
             }
         }
-        stage('Check') {
-            steps {
-                sh('''#!/bin/bash
-                        source ./local/bin/activate
-                        flake8 --ignore=E501,E231 *.py tests/*.py
-                        ''')
-                sh('''#!/bin/bash
-                        source ./local/bin/activate
-                        pylint --errors-only --disable=C0301 --disable=C0326 *.py tests/*.py
-                        ''')
-                sh('''#!/bin/bash
-                        source ./local/bin/activate
-                        python -m unittest --verbose --failfast
-                        ''')
+        parallel {
+            stage('Check:Lint') {
+                steps {
+                    sh('''#!/bin/bash
+                            source ./local/bin/activate
+                            flake8 --ignore=E501,E231 *.py tests/*.py
+                            pylint --errors-only --disable=C0301 --disable=C0326 *.py tests/*.py
+                            ''')
+                }
+            }
+            stage('Check:UnitTest') {
+                steps {
+                    sh('''#!/bin/bash
+                            source ./local/bin/activate
+                            python -m unittest --verbose --failfast
+                            ''')
+                }
             }
         }
         stage('Build') {
