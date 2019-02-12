@@ -8,7 +8,9 @@ environment=${1:-staging}
 
 ##############################################################################
 # REMOVE THE LINES BELOW AND CUSTOMIZE THE SCRIPT FOR YOUR DEPLOYMENT
+echo #########################################################################
 echo "DEPLOYMENT SCRIPT NEEDS TO BE CUSTOMIZED"
+echo #########################################################################
 exit 0
 # REMOVE THE LINES ABOVE AND CUSTOMIZE THE SCRIPT FOR YOUR DEPLOYMENT
 ##############################################################################
