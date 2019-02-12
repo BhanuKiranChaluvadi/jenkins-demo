@@ -4,6 +4,26 @@ bucket=${2:-${application}-bundles}
 tag=$(date +%F)-$(git rev-parse --short HEAD)
 bundle=${application}-${tag}.zip
 
+
+
+
+
+
+
+
+##############################################################################
+# REMOVE THE LINES BELOW AND CUSTOMIZE THE SCRIPT FOR YOUR DEPLOYMENT
+echo "DEPLOYMENT SCRIPT NEEDS TO BE CUSTOMIZED"
+exit 0
+# REMOVE THE LINES ABOVE AND CUSTOMIZE THE SCRIPT FOR YOUR DEPLOYMENT
+##############################################################################
+
+
+
+
+
+
+
 check_version=$(aws elasticbeanstalk describe-application-versions --application-name ${application} --version-label ${tag} --query "ApplicationVersions[0]")
 
 if [ "${check_version}" = "null" ];
